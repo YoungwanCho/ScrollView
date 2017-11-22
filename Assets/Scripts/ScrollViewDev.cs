@@ -40,32 +40,33 @@ public class ScrollViewDev : MonoBehaviour
         {
             return;
         }
-
+        int progressCount = Mathf.Abs(_currentScrollCount - _previousScrollCount);
         if (_currentScrollCount > _previousScrollCount)
         {
-            RepositionDown();
+            RepositionDown(progressCount);
         }
         else if (_currentScrollCount < _previousScrollCount)
         {
-            RepositionUp();
+            RepositionUp(progressCount);
         }
         _previousScrollCount = _currentScrollCount;
     }
 
-    private void RepositionDown()
+    private void RepositionDown(int progressCount)
     {
+        int count = progressCount * _contentColumn;
         List<Content> firstRowList = new List<Content>();
-        for (int i = 0; i < _contentColumn; i++)
+        for (int i = 0; i < count; i++)
         {
             firstRowList.Add(_contents[i]);
         }
-        for (int i = 0; i < _contentColumn; i++)
+        for (int i = 0; i < count; i++)
         {
             _contents.Remove(firstRowList[i]);
         }
         for (int i = 0; i < firstRowList.Count; i++)
         {
-            firstRowList[i].UpdateContent(((_currentScrollCount * _contentColumn) + _contents.Count + i).ToString());
+            firstRowList[i].UpdateContent(((_currentScrollCount * count) + _contents.Count + i).ToString());
         }
         _contents.AddRange(firstRowList);
 
@@ -80,10 +81,11 @@ public class ScrollViewDev : MonoBehaviour
         }
     }
 
-    private void RepositionUp()
+    private void RepositionUp(int progressCount)
     {
+        int count = progressCount * _contentColumn;
         List<Content> lastRowList = new List<Content>();
-        for (int i = _contents.Count - _contentColumn; i < _contents.Count; i++)
+        for (int i = _contents.Count - count; i < _contents.Count; i++)
         {
             lastRowList.Add(_contents[i]);
         }
